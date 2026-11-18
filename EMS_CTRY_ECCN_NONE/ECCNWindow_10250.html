@@ -119,6 +119,13 @@ function EventWindowBeforeSave()
 	// Function called after the save button is clicked
 	// but before the save processing takes place.  Return
 	// false to stop the save from being processed.
+	try {
+		var aNode = GPDataGetMasterGPData().selectSingleNode('//ems_ctry_eccn');
+		if (aNode != null && aNode.getAttribute('sys_varchar_3') == null)
+			aNode.setAttribute('sys_varchar_3', '');
+	}
+	catch (aException) {
+	}
 	return true;
 }
 </script>
