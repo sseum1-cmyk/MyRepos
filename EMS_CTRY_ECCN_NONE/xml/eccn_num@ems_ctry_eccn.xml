@@ -1,0 +1,23 @@
+<PopupDesc Name="eccn_num@ems_ctry_eccn" Type="Complex" Cache="false" maxRowsToReturn="500">
+	<WindowProperties>
+		<Property Name="Title" Value="Export Commodity Control Number Popup"/>
+		<Property Name="DialogWidth" Value="450px"/>
+		<Property Name="DialogHeight" Value="450px"/>
+	</WindowProperties>
+	<SelectColumns>
+		<ColumnDesc Name="ems_ctry_eccn.eccn_num" Title="ECN" Hidden="false" Alias="eccn_num" Size="" Width=""/>
+		<ColumnDesc Name="ems_ctry_eccn.description" Title="Description" Hidden="false" Alias="description" Size="" Width=""/>
+		<ColumnDesc Name="ems_ctry_eccn.sys_varchar_1" Title="Country ECLN" Hidden="false" Alias="sys_varchar_1" Size="" Width=""/>
+	</SelectColumns>
+	<SelectTables>
+		<ems_ctry_eccn Alias="ems_ctry_eccn"/>
+	</SelectTables>
+	<SelectQualifier Value=""/>
+	<OrderQualifier Value="ems_ctry_eccn.eccn_num"/>
+	<SelectPallet>
+		<Filter Title="Export Commodity Control Number" Value="">
+			<Operation Title="Contains" Value="2"/>
+			<Criteria Type="Text" SearchEnableSize="" Name="eccn_num" DataType="String"/>
+		</Filter>
+	</SelectPallet>
+</PopupDesc>

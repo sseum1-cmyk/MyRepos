@@ -1,0 +1,346 @@
+ <!--	Prolog Section
+
+***********************************************************************************
+*                                                                                 *
+*  Copyright 2002, Vastera, Inc.           Company Proprietary and Confidential   *
+*                                                                                 *
+***********************************************************************************
+*                                                                                  
+*  Do not make modifications to this file unless the file has been placed into
+*  a version control system.
+*
+*  VASTERA CONFIGURATION INFORMATION
+*  
+*  File Name:  $Workfile:   ECCNWindow_10250.html  $
+*  File Path:  $Archive:   P:/archives/Common_Components/archives/Development/TRADE_DATA/ECCN/web_ui/common/html/EMS_CTRY_ECCN_NONE/ECCNWindow_10250.html-arc  $
+*  Revision Number:  $Revision:   1.8  $
+*  Revision Date:  $Date:   Jul 11 2005 22:08:52  $
+*
+*  CLIENT SPECIFIC CONFIGURATION INFORMATION 
+*
+***********************************************************************************
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<Title> ECN Window</Title>
+
+
+<!-- Meta Data Information Section -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<!-- Include/Link/Import global files for CSS -->
+<Link Href = "common/css/vas_gp_common.css" Rel = "stylesheet">
+<Link Href = "common/css/vas_gp_form.css" Rel = "stylesheet">
+<Link Href = "common/css/vas_gp_menu_tabs.css" Rel = "stylesheet">
+
+
+<!-- Local Styles -->
+
+<!-- Include global files for javascript (js files) -->
+<script language="JScript" src="GPServer?templateName=common/javascript/TagReplacement.js"></script>
+<script language="javascript" src="common/javascript/WIFInterface.js"></script>
+<script language="javascript" src="common/javascript/SLManipulation_Proxy.js"></script>
+<script language="javascript" src="common/javascript/DynamicWindowSupport.js"></script>
+<script language="javascript" src="common/javascript/TabManagement.js"></script>
+<script language="javascript" src="common/javascript/vas_common_lock.js"></script>
+<script language="javascript" src="common/javascript/vas_gp_message.js"></script>
+<script language="javascript" src="common/javascript/vas_common_error_handling.js"></script>
+
+
+<!-- Include global files for XML (xml files) -->
+
+
+<!-- XML Definition Section -->
+<!-- XML Data Definition Section -->
+<XML id="WindowPropertiesXML">
+	<Properties>
+		<StaticTitle>ECN</StaticTitle>
+		<CurrentTitle>ECN</CurrentTitle>
+	</Properties>
+</XML>
+
+<!-- XML SmarteLink Definition Section -->
+</HEAD>
+
+
+<!-- Page level variable section -->
+
+
+
+<!-- Event Handling Section -->
+
+
+
+<!-- JScript functions -->
+<script>
+function EventWindowAfterTitleUpdate()
+{
+	AdjustWindowContentHeight();
+}
+</script>
+<script>
+function EventWindowAfterWindowLoad()
+{
+	// Function called when the window is first opened.
+	AddTitleColumn(1,"ctry_code","Country");
+	AddTitleColumn(2,"lic_ga_code","Licensing Agency");
+	AddTitleColumn(3,"eccn_num","ECN");
+	g_WindowReadOnly = true;
+	return true;
+}
+</script>
+<script>
+function EventWindowTabChangeRequest(theControl, theWindow, isChildRequest, theRequestType)
+{
+	// Function called after a tab is clicked.  Return
+	// false to stop the tab change from occuring.
+	return true;
+}
+</script>
+<script>
+function EventWindowBeforeNew(theKeyNode)
+{
+	// Function called after the New button is clicked but before the new processing occurs.
+	return true;
+}
+</script>
+<script>
+function EventWindowAfterNew()
+{
+	// Function called after the New button is clicked and the new processing has completed.
+	return true;
+}
+</script>
+<script>
+function EventWindowBeforeSave()
+{
+	// Function called after the save button is clicked
+	// but before the save processing takes place.  Return
+	// false to stop the save from being processed.
+	return true;
+}
+</script>
+<script>
+function EventWindowAfterSave()
+{
+	// Function called after the save button is clicked
+	// and after the save processing takes place.
+	return true;
+}
+</script>
+<script>
+function EventWindowBeforeDelete()
+{
+	// Function called after the delete button is clicked
+	// but before the delete processing takes place.  Return
+	// false to stop the delete from being processed.
+	return true;
+}
+</script>
+<script>
+function EventWindowAfterDelete()
+{
+	// Function called after the delete button is clicked
+	// and after the delete processing takes place.
+	return true;
+}
+</script>
+<script>
+function EventWindowBeforeSaveAs(theSaveAsDescriptor)
+{
+	// Function called after the Save As button is clicked
+	// but before the save as processing takes place.  Return
+	// false to stop the save as from being processed.
+	return true;
+}
+</script>
+<script>
+function EventWindowAfterSaveAs()
+{
+	// Function called after the Save As button is clicked
+	// and after the save as processing takes place.
+	return true;
+}
+</script>
+<script>
+function EventWindowBeforeRetrieve(theKeyNode)
+{
+	// Function that occurs when a retrieve is triggered but before it actually occurs
+	return true;
+}
+</script>
+<script>
+function EventWindowAfterHeaderRetrieve()
+{
+	// Function called after an existing record is retrieved.
+	return true;
+}
+</script>
+<script>
+function EventWindowAfterHeaderCreate()
+{
+	// Function called after an new record is created.
+	return true;
+}
+</script>
+<script>
+function EventWindowChildAfterValueChange(theWindow, theChild)
+{
+	// Function called after a change is made to any control.
+	return true;
+}
+</script>
+<script>
+function EventWindowChildTabChange(theWindow, theTable, theWidget)
+{
+	// Function called when a child tab is selected
+	return true;
+}
+</script>
+<script>
+function EventWindowChildReturn(theWindow, theURL)
+{
+	// Function called after the return button is clicked
+	return true;
+}
+</script>
+<script>
+function EventWindowChildPageLoad(theWindow, isChild)
+{
+	// Function called after a newly selected tab is loaded
+	return;
+}
+</script>
+<script>
+function EventWindowChildPageUnload(theWindow)
+{
+	// Function called before any page is unloaded
+	return;
+}
+</script>
+<script>
+function EventWindowBeforeWindowUnload()
+{
+	// Function called before the page is unloaded
+	return;
+}
+</script>
+
+ <body onkeydown="return HandleKeyDown();">
+	<div NoWrap id="layer1" datasrc="#WindowPropertiesXML" datafld="CurrentTitle" class="divWindowTitle">ECN</div>
+	<div id="menu" name="menu" class="divMenuBar" onresize="AdjustWindowContentHeight();">
+		<table cellpadding='0' cellspacing='0' id='menuTable' name='menuTable' width='100%'>
+			<tr>
+				<td align='left' class='tdMenu1' valign='top'>
+					<table border='0' cellpadding='0' cellspacing='0' class='toolbarTable' width='100%'>
+						<tr>
+							<td>
+								<table align='left' border='0' cellpadding='0' cellspacing='0' class='toolbarFunctionTable'>
+									<tr>
+										<td class='windowActionMenuTopLeft'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='topNewBtn' name='topNewBtn' onclick='ProcessNew();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>New</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='topSaveBtn' name='topSaveBtn' onclick='ProcessSave();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='topSaveAsBtn' name='topSaveAsBtn' onclick='ProcessSaveAs();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save As</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='topDeleteBtn' name='topDeleteBtn' onclick='ProcessDelete();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Delete</span></td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table align='right' border='0' cellpadding='0' cellspacing='0' class='toolbarNavigationTable'>
+									<tr>
+										<td class='windowActionMenu'><span class='windowActionText' id='topPreviousBtn' name='topPreviousBtn' onclick='return ProcessTabChange(g_TabList[GetPreviousTabIndex()], g_TAB_CHANGE_PREVIOUS);' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>&lt;&lt; Previous</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='topNextBtn' name='topNextBtn' onclick='return ProcessTabChange(g_TabList[GetNextTabIndex()], g_TAB_CHANGE_NEXT);' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Next &gt;&gt;</span></td>
+										<td class='windowActionMenuTopRight'></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class='tdMenu1' colspan='3' valign='top'>
+					<table border='0' cellpadding='0' cellspacing='0' width='100%'>
+						<tr valign='top'>
+							<td align='left' class='tdMenu2' valign='top'>
+								<div style='height:6; width:6;' class='menuSpaceDiv'>
+								</div>
+							</td>
+							<td class='tdMenu2' id='collapseMenu' valign='top'>
+								<div style='position:relative; visibility:visible;' id='divMenu2Header'>
+									<A target="contentFrame" Href="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/General_10251.html" ID="General" class="anchorMenu2textSelected" onclick="return ProcessTabChange(this, g_TAB_CHANGE_SPECIFIC);">General
+									</A>
+									<Img Src="common/images/delimiter3.gif" Width="10" Height="12"></Img>
+									<A target="contentFrame" Href="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/SubECCN_10252.html" ID="SubECCN" class="anchorMenu2text" onclick="return ProcessTabChange(this, g_TAB_CHANGE_SPECIFIC);">Sub ECN
+									</A>
+								</div>
+							</td>
+							<td align='right' class='tdMenu2' valign='top'>
+								<div style='height:6; width:6;' class='menuSpaceDiv'>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr align='top' height='100%' id='tdMenu2Items'>
+				<td colspan='3'>
+					<div class='divIframeContent' id='inlineFrame1'>
+						<iframe background-color='#eeeeee' frameborder='0' height='100%' id='contentFrame' name='contentFrame' src="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/General_10251.html" width='100%'>
+						</iframe>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align='left' class='tdMenu1' valign='top'>
+					<table border='0' cellpadding='0' cellspacing='0' class='toolbarTable' width='100%'>
+						<tr>
+							<td>
+								<table align='left' border='0' cellpadding='0' cellspacing='0' class='toolbarFunctionTable'>
+									<tr>
+										<td class='windowActionMenuBottomLeft'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='bottomNewBtn' name='bottomNewBtn' onclick='ProcessNew();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>New</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='bottomSaveBtn' name='bottomSaveBtn' onclick='ProcessSave();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='bottomSaveAsBtn' name='bottomSaveAsBtn' onclick='ProcessSaveAs();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save As</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='bottomDeleteBtn' name='bottomDeleteBtn' onclick='ProcessDelete();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Delete</span></td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table align='right' border='0' cellpadding='0' cellspacing='0' class='toolbarNavigationTable'>
+									<tr>
+										<td class='windowActionMenu'><span class='windowActionText' id='bottomPreviousBtn' name='bottomPreviousBtn' onclick='return ProcessTabChange(g_TabList[GetPreviousTabIndex()], g_TAB_CHANGE_PREVIOUS);' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>&lt;&lt; Previous</span></td>
+										<td class='windowActionMenuSpace'></td>
+										<td class='windowActionMenu'><span class='windowActionText' id='bottomNextBtn' name='bottomNextBtn' onclick='return ProcessTabChange(g_TabList[GetNextTabIndex()], g_TAB_CHANGE_NEXT);' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Next &gt;&gt;</span></td>
+										<td class='windowActionMenuBottomRight'></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+
+<!-- Initialization Section -->
+<script>
+SetWindowProperties(WindowPropertiesXML);
+SetRootTableName('ems_ctry_eccn')
+self.AddTab(General);
+self.AddTab(SubECCN);
+window.attachEvent('onunload', ProcessWindowClose);
+window.attachEvent('onload', ProcessWindowOpen);
+AdjustWindowContentHeight();
+</script>
+</HTML>

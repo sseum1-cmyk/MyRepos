@@ -1,0 +1,9 @@
+<SchemaDesc>
+ <ems_ctry_eccn1_view ctry_code='' sub_org='' eccn_num='' lic_ga_code=''/>
+ <ems_ctry_eccn ctry_code='' sub_org='' eccn_num='' lic_ga_code=''>
+  <ems_ctry_eccn_ctl ctry_code='' sub_org='' eccn_num='' lic_ga_code='' ctl_code=''/>
+  <ems_ctry_seccn ctry_code='' sub_org='' eccn_num='' lic_ga_code='' sub_eccn_num=''>
+   <ems_ctry_seccn_ctl ctry_code='' sub_org='' eccn_num='' lic_ga_code='' sub_eccn_num='' ctl_code=''/>
+		</ems_ctry_seccn>
+	</ems_ctry_eccn>
+</SchemaDesc>

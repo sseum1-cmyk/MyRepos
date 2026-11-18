@@ -1,0 +1,16 @@
+<PopupDesc Name="ctl_code@emss_type_value" Type="Simple" Cache="false" maxRowsToReturn="500">
+	<WindowProperties>
+		<Property Name="Title" Value="Export Commodity Control Code"/>
+		<Property Name="DialogWidth" Value="450px"/>
+		<Property Name="DialogHeight" Value="450px"/>
+	</WindowProperties>
+	<SelectColumns>
+		<ColumnDesc Name="emss_type_value.user_varchar_2" Title="Export Commodity Control Code" Hidden="false" Alias="user_varchar_2" Size="" Width=""/>
+		<ColumnDesc Name="emss_type_value.description" Title="Description" Hidden="false" Alias="description" Size="" Width=""/>
+	</SelectColumns>
+	<SelectTables>
+		<emss_type_value Alias="emss_type_value"/>
+	</SelectTables>
+	<SelectQualifier Value="(emss_type_value.user_varchar_1 = '$$gpGetSessionData[sl_user_ctry]' and emss_type_value.type = 'CTL_COMM_EXP')"/>
+	<OrderQualifier Value="emss_type_value.user_varchar_2"/>
+</PopupDesc>

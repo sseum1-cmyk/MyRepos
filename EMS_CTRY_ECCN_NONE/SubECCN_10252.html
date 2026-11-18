@@ -1,0 +1,273 @@
+ <!--	Prolog Section
+
+***********************************************************************************
+*                                                                                 *
+*  Copyright 2002, Vastera, Inc.           Company Proprietary and Confidential   *
+*                                                                                 *
+***********************************************************************************
+*                                                                                  
+*  Do not make modifications to this file unless the file has been placed into
+*  a version control system.
+*
+*  VASTERA CONFIGURATION INFORMATION
+*  
+*  File Name:  $Workfile:   SubECCN_10252.html  $
+*  File Path:  $Archive:   P:/archives/Common_Components/archives/Development/TRADE_DATA/ECCN/web_ui/common/html/EMS_CTRY_ECCN_NONE/SubECCN_10252.html-arc  $
+*  Revision Number:  $Revision:   1.7  $
+*  Revision Date:  $Date:   Feb 11 2004 10:22:26  $
+*
+*  CLIENT SPECIFIC CONFIGURATION INFORMATION 
+*
+***********************************************************************************
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<Title> Sub ECN</Title>
+
+
+<!-- Meta Data Information Section -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<!-- Include/Link/Import global files for CSS -->
+<Link Href = "common/css/vas_gp_common.css" Rel = "stylesheet">
+<Link Href = "common/css/vas_gp_form.css" Rel = "stylesheet">
+<Link Href = "common/css/vas_gp_table_array.css" Rel = "stylesheet">
+
+
+<!-- Local Styles -->
+
+<!-- Include global files for javascript (js files) -->
+<script language="JScript" src="GPServer?templateName=common/javascript/TagReplacement.js"></script>
+<script language="javascript" src="common/javascript/WIFInterface.js"></script>
+<script language="javascript" src="common/javascript/SLManipulation_Proxy.js"></script>
+<script language="javascript" src="common/javascript/vas_common_wizard.js"></script>
+<script language="javascript" src="common/javascript/vas_common_constant.js"></script>
+<script language="javascript" src="common/javascript/vas_common_configuration.js"></script>
+<script language="javascript" src="common/javascript/vas_common_date_utility.js"></script>
+<script language="javascript" src="common/javascript/vas_common_number_utility.js"></script>
+<script language="javascript" src="common/javascript/DynamicTabManagement.js"></script>
+
+
+<!-- Include global files for XML (xml files) -->
+
+
+<!-- XML Definition Section -->
+<!-- XML Data Definition Section -->
+     <XML id = 'DataIslandDesc'>
+        <DataIslands>
+        	<DataIslandDesc id = 'DataIsland_ems_ctry_seccn'>
+				<Table name='ems_ctry_seccn'  currentRecordFlag = 'FALSE'/>
+        	</DataIslandDesc>
+        </DataIslands>
+    </XML>
+
+<!-- XML SmarteLink Definition Section -->
+</HEAD>
+
+
+<!-- Page level variable section -->
+
+
+
+<!-- Event Handling Section -->
+<script for="DataTable_ems_ctry_seccn" event="onreadystatechange">
+    TableConfigure(DataTable_ems_ctry_seccn, window);
+    ConfigurePage(DataTable_ems_ctry_seccn, readyState);
+</script>
+
+
+
+<!-- JScript functions -->
+<script>
+function EventTabAfterPageLoad(theWindow)
+{
+	// Function called after a child tab is loaded
+	return true;
+}
+</script>
+<script>
+function EventTabBeforePageUnload(theWindow)
+{
+	// Function called before a child tab is unloaded
+	return true;
+}
+</script>
+<script>
+function EventTabBeforeRowAppend(theWindow, theTable)
+{
+	// Function called before a row is appended
+	return true;
+}
+</script>
+<script>
+function EventTabAfterRowAppend(theWindow, theTable)
+{
+	// Function called after a row is appended
+	return true;
+}
+</script>
+<script>
+function EventTabBeforeRowDelete(theWindow, theTable)
+{
+	// Function called before a row is deleted
+	return true;
+}
+</script>
+<script>
+function EventTabAfterRowDelete(theWindow, theTable)
+{
+	// Function called after a row is deleted
+	return true;
+}
+</script>
+<script>
+function EventTabChildTabChangeRequest(theWidget, theWindow)
+{
+	// Function called after a child tab is clicked
+	return true;
+}
+</script>
+<script>
+///////////////////////////////////////////////////////
+//
+//  FUNCTION: SetPageState()
+//
+///////////////////////////////////////////////////////
+function SetPageState()
+{
+	window.parent.SetPageState(window);
+}
+///////////////////////////////////////////////////////
+//
+//  FUNCTION: DocumentOnReadyStateChangeEventHandler()
+//
+///////////////////////////////////////////////////////
+function DocumentOnReadyStateChangeEventHandler()
+{
+	if (document.readyState != "complete") {
+		return;
+	}
+
+    	WindowBuildDataIslands(window);
+    	WindowBindDataIslands(window);
+}
+///////////////////////////////////////////////////////
+//
+//  FUNCTION: WindowOnUnloadEventHandler()
+//
+///////////////////////////////////////////////////////
+function WindowOnUnloadEventHandler()
+{
+    try {
+        WindowTableBuildDeltaTransaction(window);
+    	GPDataApplyDelta(window, null);
+        aCurrentRecordXML = TableGetCurrentXMLElement(DataTable_ems_ctry_seccn);
+        CurrRecMgmtSet('ems_ctry_seccn', aCurrentRecordXML);
+	}
+	catch (aException) {
+	}
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_seccn_sub_eccn_num(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_seccn_description(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_seccn_user_varchar_1(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_seccn_user_varchar_2(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_seccn_lic_req_flg(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+
+
+
+<script>
+function EventWindowAfterWindowLoad()
+{
+	g_WindowReadOnly = true; 
+	return true;
+}
+</script>
+
+<BODY class="tabFormBody"  onkeydown="window.parent.HandleKeyDown(event, window);">
+<fieldset>
+<legend>Sub ECN</legend>
+<Table class="arrayHeaderTable" Border="0">
+	<THEAD class="trtablearraytitles">
+		<TD style="width:100px;" align="center"><DIV Align="center" class="arrayTitle"><b>Sub ECN</b></DIV></TD>
+		<TD style="width:200px;" align="center"><DIV Align="center" class="arrayTitle">Description</DIV></TD>
+		<TD style="width:89px;" align="center"><DIV Align="center" class="arrayTitle">Automation Type</DIV></TD>
+		<TD style="width:89px;" align="center"><DIV Align="center" class="arrayTitle">Automation Note</DIV></TD>
+		<TD style="width:80px;" align="center"><DIV Align="center" class="arrayTitle">License Required</DIV></TD>
+	</THEAD>
+</Table>
+<DIV STYLE="overflow-y:scroll;height:170px;" class="arrayDiv">
+<Table class="arrayDataTable" isArray="TRUE" GPDataTemplate="ems_ctry_seccn" Align="LEFT" Border="0" ID="DataTable_ems_ctry_seccn" datasrc="#DataIsland_ems_ctry_seccn">
+<TR id="templateRow" class="trTableArrayGray">
+	<TD style="width:100px;"><Input displayText="Sub ECCN" isRequired="TRUE" Type="TEXT" style="width:100px;" Name="sub_eccn_num" ID="sub_eccn_num" datafld="sub_eccn_num" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn, EventFieldOnChange_ems_ctry_seccn_sub_eccn_num);"></TD>
+	<TD style="width:200px;"><Input isRequired="FALSE" Type="TEXT" style="width:200px;" Name="description" ID="description" datafld="description" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn, EventFieldOnChange_ems_ctry_seccn_description);"></TD>
+	<TD style="width:89px;"><Input isRequired="FALSE" Type="TEXT" style="width:88px;" Name="user_varchar_1" ID="user_varchar_1" datafld="user_varchar_1" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn, EventFieldOnChange_ems_ctry_seccn_user_varchar_1);"></TD>
+	<TD style="width:89px;"><Input isRequired="FALSE" Type="TEXT" style="width:88px;" Name="user_varchar_2" ID="user_varchar_2" datafld="user_varchar_2" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn, EventFieldOnChange_ems_ctry_seccn_user_varchar_2);"></TD>
+	<TD style="width:80px;" align="center"><Input Type="CHECKBOX" Name="lic_req_flg" ID="lic_req_flg" datafld="lic_req_flg" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn, EventFieldOnChange_ems_ctry_seccn_lic_req_flg);"></TD>
+	<TD><Input Width="15px" Height="18px" Type="image" Src="common/images/RowDeleteBtn.gif" Name="ems_ctry_seccn_DeleteBtn" ID="ems_ctry_seccn_DeleteBtn" onclick="ProcessRowDelete(DataTable_ems_ctry_seccn);"></TD>
+	<td>
+		<img class='childLinkPopupMenuBtn' id='DataTable_ems_ctry_seccn_ChildLinkPopupMenuBtn' name='DataTable_ems_ctry_seccn_ChildLinkPopupMenuBtn' src='common/images/childLinkPopupMenuBtn.gif' onclick='ShowChildLinkPopupMenu(DataTable_ems_ctry_seccn_ChildLinkContainer);' onmouseout='this.src="common/images/childLinkPopupMenuBtn.gif";' onmouseover='this.src="common/images/childLinkPopupMenuBtnHover.gif";'></img>
+		<div style='display:none;' WA_Id='WA_ChildLinkContainer' id='DataTable_ems_ctry_seccn_ChildLinkContainer' name='DataTable_ems_ctry_seccn_ChildLinkContainer'>
+			<a class='detailAnchor' href='GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/Controls_10253.html' id='Controls' name='Controls' onclick='return ProcessChildTabChange(DataTable_ems_ctry_seccn, this);'><u>Controls</u>
+			</a>
+		</div>
+	</td>
+</TR>
+</Table>
+</DIV>
+<Table Align="right" Border="0"><TR>
+<TD><Input Type="button" Value="Add" Name="ems_ctry_seccn_AddBtn" ID="ems_ctry_seccn_AddBtn" class="arrayAddBtn" onclick="ProcessRowAppend(DataTable_ems_ctry_seccn);"></TD>
+</TR>
+</Table>
+<br>
+<Table Width="100%" Border="0"><TR Height="5" class="arrayFooterLine" bgcolor="#ffcc00" bordercolor="#006699">
+<TD></TD>
+</TR>
+</Table>
+</fieldset>
+</BODY>
+
+
+<!-- Initialization Section -->
+<script>
+	TableConfigure(DataTable_ems_ctry_seccn, window);
+
+	window.document.attachEvent('onreadystatechange', DocumentOnReadyStateChangeEventHandler);
+	window.attachEvent('onload', ProcessPageLoad);
+	window.attachEvent('onunload', ProcessPageUnload);
+	WindowSetBeforeSaveEventHandler(window, WindowOnUnloadEventHandler);
+	SetPageState();
+</script>
+</HTML>

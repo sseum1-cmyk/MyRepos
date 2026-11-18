@@ -1,0 +1,16 @@
+<PopupDesc Name="ctry_code@ems_ctry" Type="Simple" Cache="false" maxRowsToReturn="500">
+	<WindowProperties>
+		<Property Name="Title" Value="Country Code Popup"/>
+		<Property Name="DialogWidth" Value="450px"/>
+		<Property Name="DialogHeight" Value="450px"/>
+	</WindowProperties>
+	<SelectColumns>
+		<ColumnDesc Name="ems_ctry.ctry_code" Title="Country Code" Hidden="false" Alias="ctry_code" Size="" Width=""/>
+		<ColumnDesc Name="ems_ctry.ctry_name" Title="Country Name" Hidden="false" Alias="ctry_name" Size="" Width=""/>
+	</SelectColumns>
+	<SelectTables>
+		<ems_ctry Alias="ems_ctry"/>
+	</SelectTables>
+	<SelectQualifier Value=""/>
+	<OrderQualifier Value="ems_ctry.ctry_code"/>
+</PopupDesc>

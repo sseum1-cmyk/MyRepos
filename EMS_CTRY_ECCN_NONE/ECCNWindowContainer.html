@@ -1,0 +1,91 @@
+ <!--	Prolog Section
+
+***********************************************************************************
+*                                                                                 *
+*  Copyright 2002, Vastera, Inc.           Company Proprietary and Confidential   *
+*                                                                                 *
+***********************************************************************************
+*                                                                                  
+*  Do not make modifications to this file unless the file has been placed into
+*  a version control system.
+*
+*  VASTERA CONFIGURATION INFORMATION
+*  
+*  File Name:  $Workfile:   ECCNWindowContainer.html  $
+*  File Path:  $Archive:   P:/archives/Common_Components/archives/Development/TRADE_DATA/ECCN/web_ui/common/html/EMS_CTRY_ECCN_NONE/ECCNWindowContainer.html-arc  $
+*  Revision Number:  $Revision:   1.7  $
+*  Revision Date:  $Date:   Feb 11 2004 10:22:28  $
+*
+*  CLIENT SPECIFIC CONFIGURATION INFORMATION 
+*
+***********************************************************************************
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<Title> ECN Window</Title>
+
+
+<!-- Meta Data Information Section -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<!-- Include/Link/Import global files for CSS -->
+
+
+<!-- Local Styles -->
+
+<!-- Include global files for javascript (js files) -->
+<script language="JScript" src="GPServer?templateName=common/javascript/TagReplacement.js"></script>
+<script language="JScript" src="common/javascript/ClientCacheSupport.js"></script>
+<script language="JScript" src="common/javascript/CurrentRecordMgmt.js"></script>
+<script language="JScript" src="common/javascript/DataIslandSupport.js"></script>
+<script language="JScript" src="common/javascript/DeltaManagementSupport.js"></script>
+<script language="JScript" src="common/javascript/GlobalPassport.js"></script>
+<script language="JScript" src="common/javascript/GPDataSupport.js"></script>
+<script language="JScript" src="common/javascript/GPServer.js"></script>
+<script language="JScript" src="common/javascript/PopupSupport.js"></script>
+<script language="JScript" src="common/javascript/RetrieveManagement.js"></script>
+<script language="JScript" src="common/javascript/SchemaSupport.js"></script>
+<script language="JScript" src="common/javascript/SLManipulation.js"></script>
+<script language="JScript" src="common/javascript/SubPullSupport.js"></script>
+<script language="JScript" src="common/javascript/TableSupport.js"></script>
+<script language="JScript" src="common/javascript/WIFCore.js"></script>
+
+
+<!-- Include global files for XML (xml files) -->
+<XML src="common/html/EMS_CTRY_ECCN_NONE/xml/SchemaDesc_ems_ctry_eccn.xml" id="SchemaDesc_ems_ctry_eccn" onreadystatechange = "WindowAddSchemaDesc(SchemaDesc_ems_ctry_eccn);"></XML>
+
+
+<!-- XML Definition Section -->
+<!-- XML Data Definition Section -->
+<XML id="MasterClientCache"><ClientCache></ClientCache></XML>
+<XML id="Master_ems_ctry_eccn"><GPData>
+<ems_ctry_eccn  ctry_code='' sub_org='' eccn_num='' lic_ga_code=''></ems_ctry_eccn></GPData>
+</XML>
+<!-- XML SmarteLink Definition Section -->
+</HEAD>
+
+
+<!-- Page level variable section -->
+
+
+
+<!-- Event Handling Section -->
+
+
+
+<!-- JScript functions -->
+
+
+
+<!-- Initialization Section -->
+<script>
+ 	WindowInitialize(SchemaDesc_ems_ctry_eccn, 'ems_ctry_eccn');
+	SLSetLogonHandle(GetLogonHandle());
+</script>
+
+
+<DIV ID="vas_form_content" name="vas_form_content"><IFrame background-color="#eeeeee" frameborder="0" height="100%" scrolling="no" src="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/ECCNWindow_10250.html" width="100%"></IFrame>
+</DIV>
+</HTML>

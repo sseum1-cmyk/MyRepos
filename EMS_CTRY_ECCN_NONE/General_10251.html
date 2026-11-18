@@ -1,0 +1,677 @@
+<!--	Prolog Section
+
+***********************************************************************************
+*                                                                                 *
+*  Copyright 2001, Vastera, Inc.           Company Proprietary and Confidential   *
+*                                                                                 *
+***********************************************************************************
+*
+*  Do not make modifications to this file unless the file has been placed into
+*  a version control system.
+*
+*  VASTERA CONFIGURATION INFORMATION
+*
+*  File Name:  $Workfile:   General_10251.html  $
+*  File Path:  $Archive:   P:/archives/Common_Components/archives/Development/TRADE_DATA/ECCN/web_ui/common/html/EMS_CTRY_ECCN_NONE/General_10251.html-arc  $
+*  Revision Number:  $Revision:   1.15  $
+*  Revision Date:  $Date:   Aug 18 2010 15:54:14  $
+*
+*  CLIENT SPECIFIC CONFIGURATION INFORMATION
+*
+***********************************************************************************
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<Title> General</Title>
+
+
+<!-- Meta Data Information Section -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<!-- Include/Link/Import global files for CSS -->
+<Link Href = "common/css/vas_gp_common.css" Rel = "stylesheet">
+<Link Href = "common/css/vas_gp_form.css" Rel = "stylesheet">
+<Link Href = "common/css/vas_gp_table_array.css" Rel = "stylesheet">
+
+
+<!-- Local Styles -->
+
+<!-- Include global files for javascript (js files) -->
+<script language="JScript" src="GPServer?templateName=common/javascript/TagReplacement.js"></script>
+<script language="javascript" src="common/javascript/WIFInterface.js"></script>
+<script language="javascript" src="common/javascript/SLManipulation_Proxy.js"></script>
+<script language="javascript" src="common/javascript/vas_common_wizard.js"></script>
+<script language="javascript" src="common/javascript/vas_common_constant.js"></script>
+<script language="javascript" src="common/javascript/vas_common_configuration.js"></script>
+<script language="javascript" src="common/javascript/vas_common_date_utility.js"></script>
+<script language="javascript" src="common/javascript/vas_common_number_utility.js"></script>
+<script language="javascript" src="common/javascript/DynamicTabManagement.js"></script>
+
+
+<!-- Include global files for XML (xml files) -->
+
+
+<!-- XML Definition Section -->
+<!-- XML Data Definition Section -->
+     <XML id = 'DataIslandDesc'>
+        <DataIslands>
+        	<DataIslandDesc id = 'DataIsland_ems_ctry_eccn'>
+    	        <View name        = 'ems_ctry_eccn1_view' SourceTable = 'ems_ctry_eccn'  currentRecordFlag = 'FALSE'>
+                    <ColumnDataFormat>
+        	            <created_date       FormatType = 'DATE'   FormatString    = 'MM/DD/YYYY' SourceDateFormat = 'DD-Mon-YYYY hh:mm:ss'/>
+        	            <last_modified_date       FormatType = 'DATE'   FormatString    = 'MM/DD/YYYY' SourceDateFormat = 'DD-Mon-YYYY hh:mm:ss'/>
+                    </ColumnDataFormat>
+                </View>
+        	</DataIslandDesc>
+        	<DataIslandDesc id = 'DataIsland_ems_ctry_eccn_ctl'>
+        		<SortConfig SortNodeName="ems_ctry_eccn_ctl" OrderByClause="(@ctl_code)"/>
+						<Table name='ems_ctry_eccn_ctl'  currentRecordFlag = 'FALSE'/>
+				 	</DataIslandDesc>
+        </DataIslands>
+    </XML>
+
+<!-- XML SmarteLink Definition Section -->
+</HEAD>
+
+
+<!-- Page level variable section -->
+
+
+
+<!-- Event Handling Section -->
+<script for="DataTable_ems_ctry_eccn_ctl" event="onreadystatechange">
+    TableConfigure(DataTable_ems_ctry_eccn_ctl, window);
+    ConfigurePage(DataTable_ems_ctry_eccn_ctl, readyState);
+</script>
+
+
+
+<!-- JScript functions -->
+<script>
+function EventTabAfterPageLoad(theWindow)
+{
+	// Function called after a child tab is loaded
+	return true;
+}
+</script>
+<script>
+function EventTabBeforePageUnload(theWindow)
+{
+	// Function called before a child tab is unloaded
+	return true;
+}
+</script>
+<script>
+function EventTabBeforeRowAppend(theWindow, theTable)
+{
+	// Function called before a row is appended
+	return true;
+}
+</script>
+<script>
+function EventTabAfterRowAppend(theWindow, theTable)
+{
+	// Function called after a row is appended
+	return true;
+}
+</script>
+<script>
+function EventTabBeforeRowDelete(theWindow, theTable)
+{
+	// Function called before a row is deleted
+	return true;
+}
+</script>
+<script>
+function EventTabAfterRowDelete(theWindow, theTable)
+{
+	// Function called after a row is deleted
+	return true;
+}
+</script>
+<script>
+///////////////////////////////////////////////////////
+//
+//  FUNCTION: SetPageState()
+//
+///////////////////////////////////////////////////////
+function SetPageState(isRetrieve)
+{
+	var aDataNode = GPDataGetMasterGPData();
+	var anExemptionList = new Array();
+
+	if ( isRetrieve && ( (window.parent.g_WindowReadOnly) || (window.parent.g_StateReadOnly) ) )
+		anExemptionList = null;
+	else
+	{
+		anExemptionList[0] = ctry_code;
+		anExemptionList[1] = popupBtn_ctry_code;
+		anExemptionList[2] = lic_ga_code;
+		anExemptionList[3] = popupBtn_lic_ga_code;
+		anExemptionList[4] = eccn_num;
+		anExemptionList[5] = popupBtn_eccn_num;
+	}
+	aDataNode = aDataNode.selectSingleNode('//ems_ctry_eccn');
+
+	window.parent.SetPageState(window, aDataNode, anExemptionList);
+}
+///////////////////////////////////////////////////////
+//
+//  FUNCTION: DocumentOnReadyStateChangeEventHandler()
+//
+///////////////////////////////////////////////////////
+function DocumentOnReadyStateChangeEventHandler()
+{
+	if (document.readyState != "complete") {
+		return;
+	}
+	ctry_code.value = GetUserCtry();
+    if (RetrieveMgmtLogIsTableRetrieved('ems_ctry_eccn')) {
+    	WindowBuildDataIslands(window);
+    	WindowBindDataIslands(window);
+    }
+}
+///////////////////////////////////////////////////////
+//
+//  FUNCTION: WindowOnUnloadEventHandler()
+//
+///////////////////////////////////////////////////////
+function WindowOnUnloadEventHandler()
+{
+    try {
+        WindowTableBuildDeltaTransaction(window);
+    	GPDataApplyDelta(window, null);
+	}
+	catch (aException) {
+	}
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_created_by(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_created_date_mm(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_created_date_dd(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_created_date_yyyy(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_last_modified_by(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_last_modified_date_mm(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_last_modified_date_dd(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_last_modified_date_yyyy(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_ctry_code(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+
+	if (theWidget == null || theWidget.value == "")
+		return true;
+
+	var theUserInput = SanitizeUserInput(theWidget.value);
+
+	var strWhere = "ems_ctry.ctry_code = '" + theUserInput.toUpperCase() + "'";
+	var aPopupNode = ValidateWizard("ctry_code@ems_ctry", strWhere);
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("ctry_code");
+		if (anAttrib != null)
+			theWidget.value = anAttrib.text;
+
+		return true;
+	}
+	else {
+		strMsg = "Invalid data entered.  Please reenter or select from the pop-up.";
+		PopupAlertConfirm("General","20", strMsg, 1);
+		theWidget.select();
+		theWidget.focus();
+		return false;
+	}
+
+}
+</script>
+<script for="popupBtn_ctry_code" event="onclick">
+	var aPopupNode = ShowWizard("ctry_code@ems_ctry", "");
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("ctry_code");
+		if (anAttrib != null)
+		{
+			window.parent.HandlePopupSelection(
+					ctry_code,
+					anAttrib.text,
+					DataTable_ems_ctry_eccn
+					);
+		}
+	}
+
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_lic_ga_code(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	if (theWidget == null || theWidget.value == "")
+		return true;
+
+	var theUserInput = SanitizeUserInput(theWidget.value);
+
+	var strWhere = "ems_ctry_lga_code.lic_ga_code = '" + theUserInput + "' and ems_ctry_lga_code.ctry_code =  '" + GetColumnValue(DataTable_ems_ctry_eccn, 'ctry_code') + "'";
+	var aPopupNode = ValidateWizard("lic_ga_code2@ems_ctry_lga_code", strWhere);
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("lic_ga_code");
+		if (anAttrib != null)
+			theWidget.value = anAttrib.text;
+
+		return true;
+	}
+	else {
+		strMsg = "Invalid data entered.  Please reenter or select from the pop-up.";
+		PopupAlertConfirm("General","20", strMsg, 1);
+		theWidget.select();
+		theWidget.focus();
+		return false;
+	}
+}
+</script>
+<script for="popupBtn_lic_ga_code" event="onclick">
+	var aPopupNode = ShowWizard("lic_ga_code2@ems_ctry_lga_code", "ems_ctry_lga_code.ctry_code =  '" + GetColumnValue(DataTable_ems_ctry_eccn, 'ctry_code') + "'");
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("lic_ga_code");
+		if (anAttrib != null)
+		{
+			window.parent.HandlePopupSelection(
+					lic_ga_code,
+					anAttrib.text,
+					DataTable_ems_ctry_eccn
+					);
+		}
+	}
+
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_eccn_num(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script for="popupBtn_eccn_num" event="onclick">
+	var aPopupNode = ShowWizard("eccn_num1@ems_ctry_eccn", "ems_ctry_eccn.ctry_code =  '" + GetColumnValue(DataTable_ems_ctry_eccn, 'ctry_code') + "' and ems_ctry_eccn.lic_ga_code =  '" + GetColumnValue(DataTable_ems_ctry_eccn, 'lic_ga_code') + "'");
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("eccn_num");
+		if (anAttrib != null)
+		{
+			window.parent.HandlePopupSelection(
+					eccn_num,
+					anAttrib.text,
+					DataTable_ems_ctry_eccn
+					);
+		}
+	}
+
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_sys_varchar_1(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_description(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_type(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_note(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_eccn_unit(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	var theUserInput = SanitizeUserInput(theWidget.value);
+	if (ValidateField("eccn_unit@emss_type_value", "emss_type_value.value = '" + theUserInput + "'", theWidget) == false)
+		return false;
+
+	return true;
+}
+</script>
+<script for="popupBtn_eccn_unit" event="onclick">
+	var aPopupNode = ShowWizard("eccn_unit@emss_type_value", "");
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("value");
+		if (anAttrib != null)
+		{
+			window.parent.HandlePopupSelection(
+					eccn_unit,
+					anAttrib.text,
+					DataTable_ems_ctry_eccn
+					);
+		}
+	}
+
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_code(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	var theUserInput = SanitizeUserInput(theWidget.value);
+	if (ValidateField("ctl_code@emss_type_value", "emss_type_value.user_varchar_1 =  '" + GetColumnValue(DataTable_ems_ctry_eccn_ctl, 'ctry_code') + "' and emss_type_value.user_varchar_2 = '" + theUserInput + "'", theWidget) == false)
+		return false;
+
+	return true;
+}
+</script>
+<script for="popupBtn_ctl_code" event="onclick">
+	var aPopupNode = ShowWizard("ctl_code@emss_type_value", "emss_type_value.user_varchar_1 =  '" + GetColumnValue(DataTable_ems_ctry_eccn_ctl, 'ctry_code') + "'");
+	if (aPopupNode != null)
+	{
+		var anAttrib = aPopupNode.attributes.getNamedItem("user_varchar_2");
+		if (anAttrib != null)
+		{
+			window.parent.HandlePopupSelection(
+					ctl_code,
+					anAttrib.text,
+					DataTable_ems_ctry_eccn_ctl
+					);
+		}
+	}
+
+</script>
+<script>
+function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+
+
+
+<BODY class="tabFormBody"  onkeydown="window.parent.HandleKeyDown(event, window);">
+	<Table Width="100%" Border="0">
+		<TR>
+			<TD>
+				<Table GPDataTemplate="ems_ctry_eccn1_view" Align="LEFT" Border="0" ID="DataTable_ems_ctry_eccn">
+					<TR>
+						<TD>
+							<Table Align="LEFT" Border="0">
+								<TR>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right"><b>Country:</b>
+										</DIV>
+									</TD>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input STYLE="width:40px;" isRetrieveKey="TRUE" isRequired="TRUE"  Type="TEXT" Name="ctry_code" ID="ctry_code" datasrc="#DataIsland_ems_ctry_eccn" datafld="ctry_code" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_ctry_code);"><Input Type="BUTTON" Value="?" Name="popupBtn_ctry_code" ID="popupBtn_ctry_code">
+										</DIV>
+									</TD>
+								</TR>
+								<TR>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right"><b>Licensing Agency:</b>
+										</DIV>
+									</TD>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input isRetrieveKey="TRUE" isRequired="TRUE"  Type="TEXT" Size="25" Name="lic_ga_code" ID="lic_ga_code" datasrc="#DataIsland_ems_ctry_eccn" datafld="lic_ga_code" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_lic_ga_code);"><Input Type="BUTTON" Value="?" Name="popupBtn_lic_ga_code" ID="popupBtn_lic_ga_code">
+										</DIV>
+									</TD>
+								</TR>
+								<TR>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right"><b>ECN:</b>
+										</DIV>
+									</TD>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input isRetrieveKey="TRUE" isRequired="TRUE"  Type="TEXT" Size="25" Name="eccn_num" ID="eccn_num" datasrc="#DataIsland_ems_ctry_eccn" datafld="eccn_num" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_eccn_num);"><Input Type="BUTTON" Value="?" Name="popupBtn_eccn_num" ID="popupBtn_eccn_num">
+										</DIV>
+									</TD>
+								</TR>
+								<TR>
+									<TD>
+									</TD>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">
+										</DIV>
+									</TD>
+								</TR>
+								<TR>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">Country ECN:
+										</DIV>
+									</TD>
+									<TD><TextArea Name="sys_varchar_1" Rows="2" Cols="50" ID="sys_varchar_1" datasrc="#DataIsland_ems_ctry_eccn" datafld="sys_varchar_1" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_sys_varchar_1);"></TextArea>
+									</TD>
+								</TR>
+								<TR>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">Description:
+										</DIV>
+									</TD>
+									<TD><TextArea Name="description" Rows="2" Cols="50" ID="description" datasrc="#DataIsland_ems_ctry_eccn" datafld="description" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_description);"></TextArea>
+									</TD>
+								</TR>
+							</Table>
+						</TD>
+					</TR>
+					<TR>
+						<TD>
+							<Table STYLE="margin-left:4px;margin-right:4px;margin-top:4px;margin-bottom:4px;" Align="LEFT" Border="0">
+								<TR>
+									<TD>
+									<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">Automation Type:
+									</DIV>
+								</TD>
+									<TD><Input isRequired="FALSE" STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Type="TEXT" Size="25" Name="type" ID="type" datasrc="#DataIsland_ems_ctry_eccn" datafld="type" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_type);">
+								</TD>
+								</TR>
+								<TR>
+									<TD>
+									<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">Automation Note:
+									</DIV>
+								</TD>
+									<TD><Input isRequired="FALSE" STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Type="TEXT" Size="59" Name="note" ID="note" datasrc="#DataIsland_ems_ctry_eccn" datafld="note" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_note);">
+								</TD>
+								</TR>
+								<TR>
+									<TD>
+									<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">ECN Unit:
+									</DIV>
+								</TD>
+									<TD>
+									<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input isRequired="FALSE" STYLE="margin-top:2px;margin-bottom:2px;" Type="TEXT" Size="25" Name="eccn_unit" ID="eccn_unit" datasrc="#DataIsland_ems_ctry_eccn" datafld="eccn_unit" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_eccn_unit);"><Input Type="BUTTON" Value="?" Name="popupBtn_eccn_unit" ID="popupBtn_eccn_unit">
+									</DIV>
+								</TD>
+								</TR>
+							</Table>
+						</TD>
+					</TR>
+				</Table>
+			</TD>
+		</TR>
+		<TR>
+			<TD>
+			</TD>
+		</TR>
+		<TR>
+			<TD>
+				<fieldset>
+					<legend>ECN Controls
+					</legend>
+					<table border="0" width="100%">
+					<TR>
+						<TD>
+							<Table class="arrayHeaderTable" Border="0">
+								<THEAD class="trtablearraytitles">
+									<TD style="width:175px;" align="center">
+										<DIV Align="center" class="arrayTitle"><b>Control Code</b>
+										</DIV>
+									</TD>
+									<TD style="width:113px;" align="center">
+										<DIV Align="center" class="arrayTitle">Control Value
+										</DIV>
+									</TD>
+								</THEAD>
+							</Table>
+
+							<DIV STYLE="overflow-y:scroll;height:170px;" class="arrayDiv" >
+								<Table class="arrayDataTable" isArray="TRUE" GPDataTemplate="ems_ctry_eccn_ctl" Align="LEFT" Border="0" ID="DataTable_ems_ctry_eccn_ctl"  datasrc="#DataIsland_ems_ctry_eccn_ctl">
+									<TR id="templateRow" class="trTableArrayGray">
+										<TD style="width:175px;">
+									<DIV NoWrap><Input isRequired="TRUE" Type="TEXT" style="width:161px;" Name="ctl_code" ID="ctl_code" datafld="ctl_code" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn_ctl, EventFieldOnChange_ems_ctry_eccn_ctl_ctl_code);"><Input Type="BUTTON" Value="?" Name="popupBtn_ctl_code" ID="popupBtn_ctl_code">
+									</DIV>
+								</TD>
+										<TD style="width:113px;"><Input isRequired="FALSE" Type="TEXT" style="width:112px;" Name="ctl_value" ID="ctl_value" datafld="ctl_value" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn_ctl, EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value);">
+								</TD>
+										<TD style="width:15px;"><Input Width="18px" Height="18px" Type="image" Src="common/images/RowDeleteBtn.gif" Name="ems_ctry_eccn_ctl_DeleteBtn" ID="ems_ctry_eccn_ctl_DeleteBtn" onclick="ProcessRowDelete(DataTable_ems_ctry_eccn_ctl);">
+								</TD>
+									</TR>
+								</Table>
+							</DIV>
+							<Table Width="100%" Border="0">
+							<tr><td>
+								<Table Align="right" Border="0">
+									<TR>
+										<TD><Input Type="button" Value="Add" Name="ems_ctry_eccn_ctl_AddBtn" ID="ems_ctry_eccn_ctl_AddBtn" class="arrayAddBtn" onclick="ProcessRowAppend(DataTable_ems_ctry_eccn_ctl);"></TD>
+									</TR>
+								</Table>
+							</td></tr>
+							<TR Height="5" class="arrayFooterLine" bgcolor="#ffcc00" bordercolor="#006699"><TD></TD></TR>
+							</Table>
+						</TD>
+					</TR>
+					</table>
+				</fieldset>
+			</TD>
+		</TR>
+
+<Table GPDataTemplate="ems_ctry_eccn1_view" Align="left" Border="0" id="DataTable_ems_ctry_eccn2">
+<tr>
+	<td><div align=right>Created By:</div></td>
+	<td>
+		<input style='width:114;' align='left' datafld='created_by' datasrc='#DataIsland_ems_ctry_eccn' id='created_by' isReadOnly='TRUE' isRequired='FALSE' maxlength='250' name='created_by' size='20' type='text'>
+	</td>
+	<td>Date:</td>
+	<td>
+		<div style='width:100;' align='left' id='created_date' name='created_date'>
+			<input style='width:24;' datafld='created_date_mm'		datasrc='#DataIsland_ems_ctry_eccn'	id='created_date_mm'	isRequired='FALSE' maxlength='2' name='created_date_mm'		isReadOnly='TRUE'	size='2' type='text'>/
+			<input style='width:24;' datafld='created_date_dd'		datasrc='#DataIsland_ems_ctry_eccn'	id='created_date_dd'	isRequired='FALSE' maxlength='2' name='created_date_dd'		isReadOnly='TRUE'	size='2' type='text'>/
+			<input style='width:34;' datafld='created_date_yyyy'	datasrc='#DataIsland_ems_ctry_eccn'	id='created_date_yyyy'	isRequired='FALSE' maxlength='4' name='created_date_yyyy'	isReadOnly='TRUE'	size='4' type='text'>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td><div align=right>Last Modified By:</div></td>
+	<td>
+		<input style='width:114;' align='left' datafld='last_modified_by' datasrc='#DataIsland_ems_ctry_eccn' id='last_modified_by' isReadOnly='TRUE' isRequired='FALSE' maxlength='250' name='last_modified_by' size='20' type='text'>
+	</td>
+	<td>Date:</td>
+	<td>
+		<div style='width:100;' align='left' id='last_modified_date' name='last_modified_date'>
+			<input style='width:24;' datafld='last_modified_date_mm'	datasrc='#DataIsland_ems_ctry_eccn' id='last_modified_date_mm'	isRequired='FALSE' maxlength='2' name='last_modified_date_mm'	isReadOnly='TRUE'	size='2' type='text'>/
+			<input style='width:24;' datafld='last_modified_date_dd'	datasrc='#DataIsland_ems_ctry_eccn' id='last_modified_date_dd'	isRequired='FALSE' maxlength='2' name='last_modified_date_dd'	isReadOnly='TRUE'	size='2' type='text'>/
+			<input style='width:34;' datafld='last_modified_date_yyyy'	datasrc='#DataIsland_ems_ctry_eccn' id='last_modified_date_yyyy'	isRequired='FALSE' maxlength='4' name='last_modified_date_yyyy' isReadOnly='TRUE'	size='4' type='text'>
+		</div>
+	</td>
+</tr>
+</table>
+
+
+
+</BODY>
+
+
+<!-- Initialization Section -->
+<script>
+	TableConfigure(DataTable_ems_ctry_eccn_ctl, window);
+	TableConfigure(DataTable_ems_ctry_eccn, window);
+	TableConfigure(DataTable_ems_ctry_eccn2, window);
+
+   	ConfigureDateField(created_date);
+	ConfigureDateField(last_modified_date);
+
+	window.document.attachEvent('onreadystatechange', DocumentOnReadyStateChangeEventHandler);
+	window.attachEvent('onload', ProcessPageLoad);
+	window.attachEvent('onunload', ProcessPageUnload);
+	WindowSetBeforeSaveEventHandler(window, WindowOnUnloadEventHandler);
+
+	var aNode = GPDataGetMasterGPData();
+	aNode = aNode.selectSingleNode('.//ems_ctry_eccn');
+	if (aNode == null)
+		SetPageState(false);
+	else
+	{
+		if (window.parent.CheckKeyFields(aNode))
+			SetPageState(true);
+		else
+			SetPageState(false);
+	}
+	function EventWindowAfterWindowLoad()
+{
+	// Function called when the window is first opened.
+	g_WindowReadOnly = true;
+
+	return true;
+}
+</script>
+</HTML>

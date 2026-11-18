@@ -1,0 +1,16 @@
+<PopupDesc Name="eccn_unit@emss_type_value" Type="Simple" Cache="false" maxRowsToReturn="500">
+	<WindowProperties>
+		<Property Name="Title" Value="ECN Unit Popup"/>
+		<Property Name="DialogWidth" Value="450px"/>
+		<Property Name="DialogHeight" Value="450px"/>
+	</WindowProperties>
+	<SelectColumns>
+		<ColumnDesc Name="emss_type_value.value" Title="ECN Unit Type" Hidden="false" Alias="value" Size="" Width=""/>
+		<ColumnDesc Name="emss_type_value.description" Title="Description" Hidden="false" Alias="description" Size="" Width=""/>
+	</SelectColumns>
+	<SelectTables>
+		<emss_type_value Alias="emss_type_value"/>
+	</SelectTables>
+	<SelectQualifier Value="(emss_type_value.type = 'ECCN_UNIT_TYPE')"/>
+	<OrderQualifier Value="emss_type_value.value"/>
+</PopupDesc>
