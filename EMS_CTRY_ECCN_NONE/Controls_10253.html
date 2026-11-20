@@ -81,6 +81,129 @@
 
 <!-- JScript functions -->
 <script>
+var theTableName = 'ems_ctry_eccn';
+
+function processSaveVerification()
+{
+	var aSLResponse;
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.processSaveVerification", "", true, "ComplianceEngine");
+	
+	var aeccn_num = GetValue(window, "ems_ctry_eccn", "eccn_num");
+	var asub_org = GetValue(window, "ems_ctry_eccn", "sub_org");
+	var actry_code = GetValue(window, "ems_ctry_eccn", "ctry_code");
+	var alic_ga_code = GetValue(window, "ems_ctry_eccn", "lic_ga_code");
+	var acontent_type = actry_code + 'ECCN';
+	
+	/* Create an array with the record keys in the order in which they appear in the database table. */
+	var theKeyValues =  SLCreateArray();
+	
+	SLAddSimpleValue(theKeyValues, actry_code);
+	SLAddSimpleValue(theKeyValues, asub_org);
+	SLAddSimpleValue(theKeyValues, aeccn_num);
+	SLAddSimpleValue(theKeyValues, alic_ga_code);
+		
+	/* Add the parameters to the SL request in the appropriate order. */
+	SLAddStructOrArrayValue(aSLRequest, theKeyValues.m_DOM.documentElement);
+	SLAddSimpleValue(aSLRequest, acontent_type);
+	SLAddSimpleValue(aSLRequest, theTableName);
+	
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+	
+		var isProcessSuccessful = SLGetSimpleValue(aSLResponse);
+		
+		if(isProcessSuccessful == 'TRUE')
+		{
+			//PopupAlertConfirm("GP","0001","Verification record saved.", 1);
+		}
+		else
+		{
+			PopupAlertConfirm("GP","0001","Failed to update verification table.", 1);
+		}
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		alert(aSLResponse.m_Exception.m_MsgList[0]);
+	} 
+}
+</script>
+<script>
+function doesContentTypeExists(contentType)
+{
+	var aSLResponse;
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.getCurrentEventId", "", true, "ComplianceEngine");
+	
+	var country;
+	var content_type;
+	
+	if (contentType!== undefined)
+	{
+		content_type = contentType;
+	}
+	else
+	{
+		country = GetValue(window, "ems_ctry_eccn", "ctry_code");
+		content_type = country + 'ECCN';
+	}
+	SLAddSimpleValue(aSLRequest, content_type);
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+		var event_id = SLGetSimpleValue(aSLResponse);
+		
+		if(event_id == -1)
+		{
+			//The content type is not defined in the master table.
+			return content_type;
+		}
+		else
+		{
+			//The content type is defined in the master table.
+			return '';
+		}
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		PopupAlertConfirm("GP","0001",aException.m_Value, 1);
+	} 
+}
+</script>
+<script>
+function getRecordsWithEventIDOlderThanOneDay()
+{
+	var aSLResponse;
+	var country = GetValue(window, "ems_ctry_eccn", "ctry_code");
+	var content_type = country + 'ECCN';
+			
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.getRecordsWithEventIDOlderThanOneDay", "", true, "ComplianceEngine");
+			
+	SLAddSimpleValue(aSLRequest, content_type);
+	SLAddSimpleValue(aSLRequest, theTableName);
+	
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+		var recordsOlderThanOneDay = SLGetSimpleValue(aSLResponse);
+		return recordsOlderThanOneDay;
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		alert(aSLResponse.m_Exception.m_MsgList[0]);
+	}
+}
+</script>
+
+<script>
 function EventTabAfterPageLoad(theWindow)
 {
 	// Function called after a child tab is loaded
@@ -180,6 +303,7 @@ function EventFieldOnChange_ems_ctry_seccn_ctl_ctl_code(theWidget)
 }
 </script>
 <script for="popupBtn_ctl_code" event="onclick">
+	WizardXMLFilePath("content/html/EMS_CTRY_ECCN_NONE/xml/");
 	var aPopupNode = ShowWizard("ctl_code@emss_type_value", "");
 	if (aPopupNode != null)
 	{

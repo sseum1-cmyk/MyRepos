@@ -90,6 +90,318 @@
 
 <!-- JScript functions -->
 <script>
+var theTableName = 'ems_ctry_eccn';
+
+function processSaveVerification()
+{
+	var aSLResponse;
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.processSaveVerification", "", true, "ComplianceEngine");
+	
+	var aeccn_num = GetValue(window, "ems_ctry_eccn", "eccn_num");
+	var asub_org = GetValue(window, "ems_ctry_eccn", "sub_org");
+	var actry_code = GetValue(window, "ems_ctry_eccn", "ctry_code");
+	var alic_ga_code = GetValue(window, "ems_ctry_eccn", "lic_ga_code");
+	var acontent_type = actry_code + 'ECCN';
+	
+	/* Create an array with the record keys in the order in which they appear in the database table. */
+	var theKeyValues =  SLCreateArray();
+	
+	SLAddSimpleValue(theKeyValues, actry_code);
+	SLAddSimpleValue(theKeyValues, asub_org);
+	SLAddSimpleValue(theKeyValues, aeccn_num);
+	SLAddSimpleValue(theKeyValues, alic_ga_code);
+		
+	/* Add the parameters to the SL request in the appropriate order. */
+	SLAddStructOrArrayValue(aSLRequest, theKeyValues.m_DOM.documentElement);
+	SLAddSimpleValue(aSLRequest, acontent_type);
+	SLAddSimpleValue(aSLRequest, theTableName);
+	
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+	
+		var isProcessSuccessful = SLGetSimpleValue(aSLResponse);
+		
+		if(isProcessSuccessful == 'TRUE')
+		{
+			//PopupAlertConfirm("GP","0001","Verification record saved.", 1);
+		}
+		else
+		{
+			PopupAlertConfirm("GP","0001","Failed to update verification table.", 1);
+		}
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		alert(aSLResponse.m_Exception.m_MsgList[0]);
+	} 
+}
+</script>
+<script>
+function EventTabDataLoadComplete(theWindow)
+{
+	//Logic for when the window has finished loading data.
+	getCurrentEventId();
+    if (ems_ctry_eccn_ctl_AddBtn.disabled)
+		SetWidgetState(ems_ctry_eccn_ctl_pullBtn, true);
+    else
+	    SetWidgetState(ems_ctry_eccn_ctl_pullBtn, false);
+	return true;
+}
+</script>
+<script>
+function doesContentTypeExists(contentType)
+{
+	var aSLResponse;
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.getCurrentEventId", "", true, "ComplianceEngine");
+	
+	var country;
+	var content_type;
+	
+	if (contentType!== undefined)
+	{
+		content_type = contentType;
+	}
+	else
+	{
+		country = GetValue(window, "ems_ctry_eccn", "ctry_code");
+		content_type = country + 'ECCN';
+	}
+	SLAddSimpleValue(aSLRequest, content_type);
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+		var event_id = SLGetSimpleValue(aSLResponse);
+		
+		if(event_id == -1)
+		{
+			//The content type is not defined in the master table.
+			return content_type;
+		}
+		else
+		{
+			//The content type is defined in the master table.
+			return '';
+		}
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		PopupAlertConfirm("GP","0001",aException.m_Value, 1);
+	} 
+}
+</script>
+<script>
+function getCurrentEventId()
+{
+	var aSLResponse;
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.getCurrentEventId", "", true, "ComplianceEngine");
+	
+	var country = GetValue(window, "ems_ctry_eccn", "ctry_code");
+	var content_type = country + 'ECCN';
+	
+	SLAddSimpleValue(aSLRequest, content_type);
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+	
+		var event_id = SLGetSimpleValue(aSLResponse);
+		
+		if(event_id == -1)
+		{
+			current_event_id.innerHTML = "&nbsp;" + 0;
+			PopupAlertConfirm("GP","0001","There is no Content Type " + content_type + " defined in the master table.", 1);
+			SetWidgetState(btnIncrementEventId,true);
+			//window.parent.g_WindowReadOnly = true;
+		}
+		else
+		{
+			current_event_id.innerHTML = "&nbsp;" + event_id;
+			aException = new SLRef(null);
+			aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.getRecordsWithEventIDOlderThanOneDay", "", true, "ComplianceEngine");
+			
+			SLAddSimpleValue(aSLRequest, content_type);
+			SLAddSimpleValue(aSLRequest, theTableName);
+			
+			aSLResponse = SLInvoke(aSLRequest);
+			if (aSLResponse.m_Exception == null)
+			{
+				var areRecordsWithEventIdOlder = SLGetSimpleValue(aSLResponse);
+				if(areRecordsWithEventIdOlder > 0)
+				{
+					divEventIdOlder.style.display ='block';
+				}
+				else
+				{
+					divEventIdOlder.style.display ='none';
+				}
+			}
+			else
+			{
+				PopupAlertConfirm("GP","0001",aException.m_Value, 1);
+			}
+			
+		}
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		alert(aSLResponse.m_Exception.m_MsgList[0]);
+	} 
+
+}
+</script>
+<script>
+function incrementEventId()
+{
+	var aSLResponse;
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.incrementCurrentEventId", "", true, "ComplianceEngine");
+	
+	var country = GetValue(window, "ems_ctry_eccn", "ctry_code");
+	var content_type = country + 'ECCN';
+	
+	SLAddSimpleValue(aSLRequest, content_type);
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+	
+		var event_id = SLGetSimpleValue(aSLResponse);
+		
+		if(event_id == -1)
+		{
+			PopupAlertConfirm("GP","0001","Error incrementing current event ID for Content Type " + content_type + "." , 1);
+		}
+		else
+		{
+			getCurrentEventId();
+			PopupAlertConfirm("GP","0001","Event ID successfully incremented for Content Type " + content_type + "." , 1);
+		}
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		alert(aSLResponse.m_Exception.m_MsgList[0]);
+	} 
+}
+</script>
+<script>
+function getRecordsWithEventIDOlderThanOneDay()
+{
+	var aSLResponse;
+	var country = GetValue(window, "ems_ctry_eccn", "ctry_code");
+	var content_type = country + 'ECCN';
+			
+	var aException = new SLRef(null);
+	var aSLRequest = SLCreateRequest("vastera.content.utils.ContentCtryUtil.getRecordsWithEventIDOlderThanOneDay", "", true, "ComplianceEngine");
+			
+	SLAddSimpleValue(aSLRequest, content_type);
+	SLAddSimpleValue(aSLRequest, theTableName);
+	
+	aSLResponse = SLInvoke(aSLRequest);
+	
+	if (aSLResponse.m_Exception == null)
+	{
+		var recordsOlderThanOneDay = SLGetSimpleValue(aSLResponse);
+		return recordsOlderThanOneDay;
+	}
+	else
+	{
+		aException.m_Value = aSLResponse.m_Exception;
+		alert(aSLResponse.m_Exception.m_MsgList[0]);
+	}
+}
+</script>
+<script for="ems_ctry_eccn_ctl_pullBtn" event="onclick">
+    var matchFound = new Boolean;
+    var aListOfCtls = new Array();
+    var aCtlCodes = new Array();
+	var oPDNode;
+	
+    var oMasterData	= GPDataGetMasterGPData().selectSingleNode("//ems_ctry_eccn");
+	var aCtryCode = GetColumnValue(DataTable_ems_ctry_eccn,'ctry_code');
+		
+	//var strWhere = "emss_type_value.type = 'CTL_COMM_EXP'";
+	WizardXMLFilePath("content/html/EMS_CTRY_ECCN_NONE/xml/");
+    var strWhere   = "emss_type_value.user_varchar_1 =  '" + aCtryCode + "'";
+	var aPopupNode = ShowWizardAsType("ctl_code@emss_type_value", strWhere, "", "list");
+    if (aPopupNode != null)
+    {
+        var aNodeList = aPopupNode.selectNodes('//PopupResult');
+        if (aNodeList.length != 0)
+        {
+            for (var aIndex = 0; aIndex < aNodeList.length; aIndex++)
+            {
+                aNode = aNodeList.item(aIndex);
+                aListOfCtls[aIndex] = new Object();
+                aListOfCtls[aIndex].ctl_code = aNode.getAttribute('user_varchar_2');
+                aListOfCtls[aIndex].description = aNode.getAttribute('description');
+            }
+	
+            if (DataTable_ems_ctry_eccn_ctl.rows.length != 0)
+            {
+                  
+                for (var j = 0; j < DataTable_ems_ctry_eccn_ctl.rows.length; j++)
+                {
+                    aCtlCodes[j] = GetValue(window, 'ems_ctry_eccn_ctl', 'ctl_code', (j+1));
+                }
+						
+                for (var i = 0; i < aListOfCtls.length; i++)
+                {
+                    matchFound = false;
+                    var control_code = aListOfCtls[i].ctl_code;
+                    var strDescription = aListOfCtls[i].description;
+
+                            for (var j = 0; j < DataTable_ems_ctry_eccn_ctl.rows.length; j++)
+                            {
+                                    if (control_code == aCtlCodes[j])
+                                    {
+                                            matchFound = true;
+                                            break;
+                                    }
+                            }
+							
+                            if (matchFound != true)
+                            {
+                                aCtlCodes[DataTable_ems_ctry_eccn_ctl.rows.length] = control_code;
+                                
+                                oPDNode = SchemaGetKeyDesc('ems_ctry_eccn_ctl');
+                                oPDNode.setAttribute('ctry_code', aCtryCode);
+                                oPDNode.setAttribute('sub_org', oMasterData.getAttribute('sub_org'));
+                                oPDNode.setAttribute('eccn_num', oMasterData.getAttribute('eccn_num'));
+                                oPDNode.setAttribute('lic_ga_code', oMasterData.getAttribute('lic_ga_code'));
+                                oPDNode.setAttribute('ctl_code', control_code);
+                                oPDNode.setAttribute('description', strDescription);
+
+                                DeltaMgmtRecordInsert(oPDNode);
+                                oMasterData.appendChild(oPDNode);
+                            }
+			    }
+                        
+                ReloadPage();
+            }
+		}
+    }
+	    
+</script>
+<script>
+function ReloadPage()  
+{  
+     GPDataEnsureTableLoaded('ems_ctry_eccn_ctl');  
+     WindowOnUnloadEventHandler();  
+     WindowBuildDataIslands(window);  
+     WindowBindDataIslands(window);  
+}    
+</script>
+<script>
 function EventTabAfterPageLoad(theWindow)
 {
 	// Function called after a child tab is loaded
@@ -156,6 +468,11 @@ function SetPageState(isRetrieve)
 	aDataNode = aDataNode.selectSingleNode('//ems_ctry_eccn');
 
 	window.parent.SetPageState(window, aDataNode, anExemptionList);
+	
+    if (ems_ctry_eccn_ctl_AddBtn.disabled)
+		SetWidgetState(ems_ctry_eccn_ctl_pullBtn, true);
+    else
+	    SetWidgetState(ems_ctry_eccn_ctl_pullBtn, false);
 }
 ///////////////////////////////////////////////////////
 //
@@ -186,6 +503,21 @@ function WindowOnUnloadEventHandler()
 	}
 	catch (aException) {
 	}
+}
+
+function RefreshModifiedInfo(isNew)
+{
+	var today = new Date();
+	if(isNew){
+        created_by.value = GetUserId();	
+	    created_date_mm.value = today.getMonth() + 1;
+	    created_date_dd.value = today.getDate();
+	    created_date_yyyy.value = today.getFullYear();
+	}
+    last_modified_by.value = GetUserId();	
+	last_modified_date_mm.value = today.getMonth() + 1;
+	last_modified_date_dd.value = today.getDate();
+	last_modified_date_yyyy.value = today.getFullYear();
 }
 </script>
 <script>
@@ -365,13 +697,6 @@ function EventFieldOnChange_ems_ctry_eccn_sys_varchar_1(theWidget)
 }
 </script>
 <script>
-function EventFieldOnChange_ems_ctry_eccn_sys_varchar_3(theWidget)
-{
-	// Function to handle the on change event.  Return false to stop the user from leaving the field.
-	return true;
-}
-</script>
-<script>
 function EventFieldOnChange_ems_ctry_eccn_description(theWidget)
 {
 	// Function to handle the on change event.  Return false to stop the user from leaving the field.
@@ -396,14 +721,15 @@ function EventFieldOnChange_ems_ctry_eccn_note(theWidget)
 function EventFieldOnChange_ems_ctry_eccn_eccn_unit(theWidget)
 {
 	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	WizardXMLFilePath("content/html/EMS_CTRY_ECCN_NONE/xml/");
 	var theUserInput = SanitizeUserInput(theWidget.value);
 	if (ValidateField("eccn_unit@emss_type_value", "emss_type_value.value = '" + theUserInput + "'", theWidget) == false)
 		return false;
-
 	return true;
 }
 </script>
 <script for="popupBtn_eccn_unit" event="onclick">
+	WizardXMLFilePath("content/html/EMS_CTRY_ECCN_NONE/xml/");
 	var aPopupNode = ShowWizard("eccn_unit@emss_type_value", "");
 	if (aPopupNode != null)
 	{
@@ -417,12 +743,14 @@ function EventFieldOnChange_ems_ctry_eccn_eccn_unit(theWidget)
 					);
 		}
 	}
+	WizardXMLFilePath("");
 
 </script>
 <script>
 function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_code(theWidget)
 {
 	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	WizardXMLFilePath("content/html/EMS_CTRY_ECCN_NONE/xml/");
 	var theUserInput = SanitizeUserInput(theWidget.value);
 	if (ValidateField("ctl_code@emss_type_value", "emss_type_value.user_varchar_1 =  '" + GetColumnValue(DataTable_ems_ctry_eccn_ctl, 'ctry_code') + "' and emss_type_value.user_varchar_2 = '" + theUserInput + "'", theWidget) == false)
 		return false;
@@ -431,6 +759,7 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_code(theWidget)
 }
 </script>
 <script for="popupBtn_ctl_code" event="onclick">
+	WizardXMLFilePath("content/html/EMS_CTRY_ECCN_NONE/xml/");
 	var aPopupNode = ShowWizard("ctl_code@emss_type_value", "emss_type_value.user_varchar_1 =  '" + GetColumnValue(DataTable_ems_ctry_eccn_ctl, 'ctry_code') + "'");
 	if (aPopupNode != null)
 	{
@@ -444,7 +773,7 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_code(theWidget)
 					);
 		}
 	}
-
+	WizardXMLFilePath("");
 </script>
 <script>
 function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
@@ -473,6 +802,10 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
 										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input STYLE="width:40px;" isRetrieveKey="TRUE" isRequired="TRUE"  Type="TEXT" Name="ctry_code" ID="ctry_code" datasrc="#DataIsland_ems_ctry_eccn" datafld="ctry_code" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_ctry_code);"><Input Type="BUTTON" Value="?" Name="popupBtn_ctry_code" ID="popupBtn_ctry_code">
 										</DIV>
 									</TD>
+									<TD>
+										<DIV STYLE="width:162;margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right"><b>Current Event ID:</b><b id="current_event_id" name="current_event_id"></b>
+										</DIV>
+									</TD>
 								</TR>
 								<TR>
 									<TD>
@@ -481,6 +814,11 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
 									</TD>
 									<TD>
 										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input isRetrieveKey="TRUE" isRequired="TRUE"  Type="TEXT" Size="25" Name="lic_ga_code" ID="lic_ga_code" datasrc="#DataIsland_ems_ctry_eccn" datafld="lic_ga_code" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_lic_ga_code);"><Input Type="BUTTON" Value="?" Name="popupBtn_lic_ga_code" ID="popupBtn_lic_ga_code">
+										</DIV>
+									</TD>
+									<TD>
+										<DIV STYLE="width:175;margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">
+											<input type='button' id='btnIncrementEventId' name='btnIncrementEventId' value="Increment Event ID" onclick="incrementEventId();" style="width:120px"/>
 										</DIV>
 									</TD>
 								</TR>
@@ -493,6 +831,10 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
 										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" NoWrap><Input isRetrieveKey="TRUE" isRequired="TRUE"  Type="TEXT" Size="25" Name="eccn_num" ID="eccn_num" datasrc="#DataIsland_ems_ctry_eccn" datafld="eccn_num" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_eccn_num);"><Input Type="BUTTON" Value="?" Name="popupBtn_eccn_num" ID="popupBtn_eccn_num">
 										</DIV>
 									</TD>
+									<TD>
+										<DIV id="divEventIdOlder" name="divEventIdOlder" STYLE="display:none;width:180;margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;font-size:9;" Align="right"><b>Event ID is <B STYLE="color:#ff0000">OLDER</B> than one day. </b>
+										</DIV>
+									</TD>	
 								</TR>
 								<TR>
 									<TD>
@@ -504,19 +846,12 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
 								</TR>
 								<TR>
 									<TD>
-										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">SYSVARHAR3:
-										</DIV>
-									</TD>
-									<TD><TextArea Name="sys_varchar_3" Rows="2" Cols="25" ID="sys_varchar_3" datasrc="#DataIsland_ems_ctry_eccn" datafld="sys_varchar_3" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_sys_varchar_3);"></TextArea>
-									</TD>
-								</TR>
-								<TR>
-									<TD>
 										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">Country ECN:
 										</DIV>
 									</TD>
 									<TD><TextArea Name="sys_varchar_1" Rows="2" Cols="50" ID="sys_varchar_1" datasrc="#DataIsland_ems_ctry_eccn" datafld="sys_varchar_1" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_sys_varchar_1);"></TextArea>
 									</TD>
+									
 								</TR>
 								<TR>
 									<TD>
@@ -605,8 +940,9 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
 							</DIV>
 							<Table Width="100%" Border="0">
 							<tr><td>
-								<Table Align="right" Border="0">
-									<TR>
+								<Table WA_Id='WA_ButtonTable' Align="right" Border="0">
+								    <TR>
+										<TD><Input Type="button" style="width:200px;" Value="Pull All Export Controls" Name="ems_ctry_eccn_ctl_pullBtn" ID="ems_ctry_eccn_ctl_pullBtn"></TD>
 										<TD><Input Type="button" Value="Add" Name="ems_ctry_eccn_ctl_AddBtn" ID="ems_ctry_eccn_ctl_AddBtn" class="arrayAddBtn" onclick="ProcessRowAppend(DataTable_ems_ctry_eccn_ctl);"></TD>
 									</TR>
 								</Table>

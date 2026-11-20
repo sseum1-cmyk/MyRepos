@@ -75,6 +75,89 @@
 
 <!-- JScript functions -->
 <script>
+function ProcessSave(theFireEventsFlag){
+
+	if (IsWifEnabled() == false){
+		PostUserEvent(window, "EventWindowBeforeSave")
+		return true;
+	}
+
+	g_SaveStatus = "start";
+	
+	try{
+		if ((topSaveBtn.disabled && bottomSaveBtn.disabled) || (topSaveBtn.m_IsReadOnly && bottomSaveBtn.m_IsReadOnly)){
+			g_SaveStatus = "fail_security";
+			return false;
+		}
+	}catch(x){}
+
+	// handle focus problem for click events	
+	try{
+		if (event != null && event.type == "click" && event.srcElement != null)
+			event.srcElement.blur();
+	}
+	catch(x){}
+
+	if (theFireEventsFlag == null)
+		theFireEventsFlag = true;
+
+	if (FinalizePage(window.frames[0], 2, theFireEventsFlag, true) == false){
+		g_SaveStatus = "fail_finalize";
+		return false;
+	}
+
+	if (theFireEventsFlag){
+		if (ValidationHook(2) == false){
+			g_SaveStatus = "fail_validation";
+			return false;
+		}
+	}
+
+	if (DeltaMgmtHasDataChanged() == false){
+		g_SaveStatus = "fail_data_change";
+		return false;
+	}
+
+	if (theFireEventsFlag){
+		if (PostUserEvent(window, "EventWindowBeforeSave", true) == false){
+			g_SaveStatus = "fail_user_event";
+			return false;
+		}
+	}
+	
+	window.status = GetStringFromCatalog(GW_SET_ID, 1, "Saving record...");
+	
+	RemoveCreatedAttributeFromMasterData();
+	
+	aMessage = GPDataSave();
+	if (aMessage != null){
+		WriteToStatusLine(GetStringFromCatalog(GW_SET_ID, 21, "Error occurred during save."));
+		g_SaveStatus = "fail_error";
+		alert(aMessage);
+		return false;
+	}
+	else
+		WriteToStatusLine(GetStringFromCatalog(GW_SET_ID, 2, "Save completed successfully."));
+		
+	//Script for Saving to ECCN Verification table.
+	window.frames[0].processSaveVerification();
+	
+	if (theFireEventsFlag)
+		PostUserEvent(window, "EventWindowAfterSave");
+
+	g_SaveStatus = "complete";
+	
+	try{
+		if (topSaveAsBtn.isReadOnly != "TRUE"){
+			EnableButtonPrivate(topSaveAsBtn);
+			EnableButtonPrivate(bottomSaveAsBtn);
+		}		
+	}catch(x){}
+
+	return true;
+}
+</script>
+<script>
 function EventWindowAfterTitleUpdate()
 {
 	AdjustWindowContentHeight();
@@ -87,7 +170,7 @@ function EventWindowAfterWindowLoad()
 	AddTitleColumn(1,"ctry_code","Country");
 	AddTitleColumn(2,"lic_ga_code","Licensing Agency");
 	AddTitleColumn(3,"eccn_num","ECN");
-	g_WindowReadOnly = true;
+	//g_WindowReadOnly = true;
 	return true;
 }
 </script>
@@ -119,13 +202,21 @@ function EventWindowBeforeSave()
 	// Function called after the save button is clicked
 	// but before the save processing takes place.  Return
 	// false to stop the save from being processed.
-	try {
-		var aNode = GPDataGetMasterGPData().selectSingleNode('//ems_ctry_eccn');
-		if (aNode != null && aNode.getAttribute('sys_varchar_3') == null)
-			aNode.setAttribute('sys_varchar_3', '');
+	var result = window.frames[0].doesContentTypeExists();
+	if(result != '')
+	{
+		PopupAlertConfirm("GP","0001","There is no Content Type " + result + " defined in the master table. It's not possible to save.", 1);
+		return false;
 	}
-	catch (aException) {
-	}
+	var recordsOlderOneDay = window.frames[0].getRecordsWithEventIDOlderThanOneDay();
+	if(recordsOlderOneDay>0)
+	{
+		var aResponse = QuestionDialog('There are [' + recordsOlderOneDay + '] records with the same event id older than 1 day, are you sure you want to save?', BS_YESNO);
+		if (aResponse == BV_NO)
+		{
+			return false;
+		}	
+	}	
 	return true;
 }
 </script>
@@ -134,6 +225,26 @@ function EventWindowAfterSave()
 {
 	// Function called after the save button is clicked
 	// and after the save processing takes place.
+	var isNew = false;
+	var today = new Date();	
+    var oMasterData	= GPDataGetMasterGPData().selectSingleNode("//ems_ctry_eccn");
+	var strCreatedBy = oMasterData.getAttribute("created_by");
+    if(strCreatedBy == null || strCreatedBy == ""){
+        oMasterData.setAttribute('created_by', GetUserId());
+        oMasterData.setAttribute('created_date', today.toDateString());
+		isNew = true;
+	}
+	
+    oMasterData.setAttribute('last_modified_by', GetUserId());
+    oMasterData.setAttribute('last_modified_date', today.toDateString());
+	
+	var strCurrWindowURL = window.frames(0).location.href;
+
+	// special logic for last modified info
+	if (strCurrWindowURL.indexOf("General_10251.html") != -1)
+	{
+	    window.frames[0].RefreshModifiedInfo(isNew);
+	}
 	return true;
 }
 </script>
@@ -160,6 +271,35 @@ function EventWindowBeforeSaveAs(theSaveAsDescriptor)
 	// Function called after the Save As button is clicked
 	// but before the save as processing takes place.  Return
 	// false to stop the save as from being processed.
+	var result = window.frames[0].doesContentTypeExists();
+	if(result != '')
+	{
+		PopupAlertConfirm("GP","0001","There is no Content Type " + result + " defined in the master table. It's not possible to save.", 1);
+		return false;
+	}
+	var recordsOlderOneDay = window.frames[0].getRecordsWithEventIDOlderThanOneDay();
+	if(recordsOlderOneDay>0)
+	{
+		var aResponse = QuestionDialog('There are [' + recordsOlderOneDay + '] records with the same event id older than 1 day, are you sure you want to save?', BS_YESNO);
+		if (aResponse == BV_NO)
+		{
+			return false;
+		}	
+	}	
+	return true;
+}
+</script>
+<script>
+function EventSaveAsDialogClose (theDescriptor,aDestKey)
+{
+	var ctry_code = aDestKey.getAttribute('ctry_code');
+	var content_type = ctry_code+'ECCN'
+	var result = window.frames[0].doesContentTypeExists(content_type);
+	if(result != '')
+	{
+		PopupAlertConfirm("GP","0001","There is no Content Type " + result + " defined in the master table. It's not possible to save.", 1);
+		return false;
+	}	
 	return true;
 }
 </script>
@@ -168,6 +308,7 @@ function EventWindowAfterSaveAs()
 {
 	// Function called after the Save As button is clicked
 	// and after the save as processing takes place.
+	window.frames[0].processSaveVerification();
 	return true;
 }
 </script>
@@ -251,8 +392,8 @@ function EventWindowBeforeWindowUnload()
 										<td class='windowActionMenuSpace'></td>
 										<td class='windowActionMenu'><span class='windowActionText' id='topSaveBtn' name='topSaveBtn' onclick='ProcessSave();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save</span></td>
 										<td class='windowActionMenuSpace'></td>
-										<td class='windowActionMenu'><span class='windowActionText' id='topSaveAsBtn' name='topSaveAsBtn' onclick='ProcessSaveAs();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save As</span></td>
-										<td class='windowActionMenuSpace'></td>
+										<!--<td class='windowActionMenu'><span class='windowActionText' id='topSaveAsBtn' name='topSaveAsBtn' onclick='ProcessSaveAs();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save As</span></td>
+										<td class='windowActionMenuSpace'></td>-->
 										<td class='windowActionMenu'><span class='windowActionText' id='topDeleteBtn' name='topDeleteBtn' onclick='ProcessDelete();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Delete</span></td>
 									</tr>
 								</table>
@@ -281,10 +422,10 @@ function EventWindowBeforeWindowUnload()
 							</td>
 							<td class='tdMenu2' id='collapseMenu' valign='top'>
 								<div style='position:relative; visibility:visible;' id='divMenu2Header'>
-									<A target="contentFrame" Href="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/General_10251.html" ID="General" class="anchorMenu2textSelected" onclick="return ProcessTabChange(this, g_TAB_CHANGE_SPECIFIC);">General
+									<A target="contentFrame" Href="GPServer?templateName=content/html/EMS_CTRY_ECCN_NONE/General_10251.html" ID="General" class="anchorMenu2textSelected" onclick="return ProcessTabChange(this, g_TAB_CHANGE_SPECIFIC);">General
 									</A>
 									<Img Src="common/images/delimiter3.gif" Width="10" Height="12"></Img>
-									<A target="contentFrame" Href="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/SubECCN_10252.html" ID="SubECCN" class="anchorMenu2text" onclick="return ProcessTabChange(this, g_TAB_CHANGE_SPECIFIC);">Sub ECN
+									<A target="contentFrame" Href="GPServer?templateName=content/html/EMS_CTRY_ECCN_NONE/SubECCN_10252.html" ID="SubECCN" class="anchorMenu2text" onclick="return ProcessTabChange(this, g_TAB_CHANGE_SPECIFIC);">Sub ECN
 									</A>
 								</div>
 							</td>
@@ -299,7 +440,7 @@ function EventWindowBeforeWindowUnload()
 			<tr align='top' height='100%' id='tdMenu2Items'>
 				<td colspan='3'>
 					<div class='divIframeContent' id='inlineFrame1'>
-						<iframe background-color='#eeeeee' frameborder='0' height='100%' id='contentFrame' name='contentFrame' src="GPServer?templateName=common/html/EMS_CTRY_ECCN_NONE/General_10251.html" width='100%'>
+						<iframe background-color='#eeeeee' frameborder='0' height='100%' id='contentFrame' name='contentFrame' src="GPServer?templateName=content/html/EMS_CTRY_ECCN_NONE/General_10251.html" width='100%'>
 						</iframe>
 					</div>
 				</td>
@@ -316,8 +457,8 @@ function EventWindowBeforeWindowUnload()
 										<td class='windowActionMenuSpace'></td>
 										<td class='windowActionMenu'><span class='windowActionText' id='bottomSaveBtn' name='bottomSaveBtn' onclick='ProcessSave();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save</span></td>
 										<td class='windowActionMenuSpace'></td>
-										<td class='windowActionMenu'><span class='windowActionText' id='bottomSaveAsBtn' name='bottomSaveAsBtn' onclick='ProcessSaveAs();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save As</span></td>
-										<td class='windowActionMenuSpace'></td>
+										<!--<td class='windowActionMenu'><span class='windowActionText' id='bottomSaveAsBtn' name='bottomSaveAsBtn' onclick='ProcessSaveAs();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Save As</span></td>
+										<td class='windowActionMenuSpace'></td>-->
 										<td class='windowActionMenu'><span class='windowActionText' id='bottomDeleteBtn' name='bottomDeleteBtn' onclick='ProcessDelete();' onmouseout='ProcessMenuMouseOut(this);' onmouseover='ProcessMenuMouseOver(this);' tabindex='0'>Delete</span></td>
 									</tr>
 								</table>
