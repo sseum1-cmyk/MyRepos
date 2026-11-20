@@ -326,13 +326,6 @@ function EventFieldOnChange_ems_ctry_seccn_ctl_ctl_value(theWidget)
 	return true;
 }
 </script>
-<script>
-function EventFieldOnChange_ems_ctry_seccn_ctl_sys_varchar_3(theWidget)
-{
-	// Function to handle the on change event.  Return false to stop the user from leaving the field.
-	return true;
-}
-</script>
 
 <BODY class="tabFormBody"  onkeydown="window.parent.HandleKeyDown(event, window);">
 <a id='returnBtn' name='returnBtn'></a>
@@ -342,7 +335,6 @@ function EventFieldOnChange_ems_ctry_seccn_ctl_sys_varchar_3(theWidget)
 	<THEAD class="trtablearraytitles">
 		<TD style="width:150px;" align="center"><DIV Align="center" class="arrayTitle"><b>Control Code</b></DIV></TD>
 		<TD style="width:139px;" align="center"><DIV Align="center" class="arrayTitle">Control Value</DIV></TD>
-		<TD style="width:139px;" align="center"><DIV Align="center" class="arrayTitle">SYSVARCHAR3</DIV></TD>
 	</THEAD>
 </Table>
 <DIV STYLE="overflow-y:scroll;height:170px;" class="arrayDiv">
@@ -350,7 +342,6 @@ function EventFieldOnChange_ems_ctry_seccn_ctl_sys_varchar_3(theWidget)
 	<TR id="templateRow" class="trTableArrayGray">
 		<TD style="width:150px;"><DIV NoWrap><Input isRequired="TRUE" Type="TEXT" style="width:137px;" Name="ctl_code" ID="ctl_code" datafld="ctl_code" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn_ctl, EventFieldOnChange_ems_ctry_seccn_ctl_ctl_code);"><Input Type="BUTTON" Value="?" Name="popupBtn_ctl_code" ID="popupBtn_ctl_code"></DIV></TD>
 		<TD style="width:139px;"><Input isRequired="FALSE" Type="TEXT" style="width:139px;" Name="ctl_value" ID="ctl_value" datafld="ctl_value" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn_ctl, EventFieldOnChange_ems_ctry_seccn_ctl_ctl_value);"></TD>
-		<TD style="width:139px;"><Input isRequired="FALSE" Type="TEXT" style="width:139px;" Name="sys_varchar_3" ID="sys_varchar_3" datafld="sys_varchar_3" class="inputtablearraygray" onchange="return ProcessValueChange(this, DataTable_ems_ctry_seccn_ctl, EventFieldOnChange_ems_ctry_seccn_ctl_sys_varchar_3);"></TD>
 		<TD><Input Width="15px" Height="18px" Type="image" Src="common/images/RowDeleteBtn.gif" Name="ems_ctry_seccn_ctl_DeleteBtn" ID="ems_ctry_seccn_ctl_DeleteBtn" onclick="ProcessRowDelete(DataTable_ems_ctry_seccn_ctl);"></TD>
 	</TR>
 </Table>
