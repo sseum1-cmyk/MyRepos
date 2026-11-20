@@ -697,6 +697,13 @@ function EventFieldOnChange_ems_ctry_eccn_sys_varchar_1(theWidget)
 }
 </script>
 <script>
+function EventFieldOnChange_ems_ctry_eccn_sys_varchar_3(theWidget)
+{
+	// Function to handle the on change event.  Return false to stop the user from leaving the field.
+	return true;
+}
+</script>
+<script>
 function EventFieldOnChange_ems_ctry_eccn_description(theWidget)
 {
 	// Function to handle the on change event.  Return false to stop the user from leaving the field.
@@ -842,6 +849,14 @@ function EventFieldOnChange_ems_ctry_eccn_ctl_ctl_value(theWidget)
 									<TD>
 										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">
 										</DIV>
+									</TD>
+								</TR>
+								<TR>
+									<TD>
+										<DIV STYLE="margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;" Align="right">SYSVARCHAR3:
+										</DIV>
+									</TD>
+									<TD><TextArea Name="sys_varchar_3" Rows="2" Cols="25" ID="sys_varchar_3" datasrc="#DataIsland_ems_ctry_eccn" datafld="sys_varchar_3" class="formfields" onchange="return ProcessValueChange(this, DataTable_ems_ctry_eccn, EventFieldOnChange_ems_ctry_eccn_sys_varchar_3);"></TextArea>
 									</TD>
 								</TR>
 								<TR>
